@@ -14,6 +14,7 @@ public class SearchPanel extends JPanel {
     private JRadioButton rbFriend;
     private JRadioButton rbAll;
     private JTextField tfInputForSearch;
+
     public SearchPanel(FrendsPanel fp) {
         this.fp = fp;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

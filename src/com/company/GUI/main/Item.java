@@ -1,5 +1,8 @@
 package com.company.GUI.main;
 
+import com.company.Connection;
+import com.company.FileMessages;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,25 +12,54 @@ import java.awt.*;
 public class Item extends JButton {
     private int id;
     private String firstName;
+    private String visibleText;
     private String surname;
-    private String status;
-    public Item(int id, String name, String surname, String status, ImageIcon icon) {
-        super("<html>" + name + " " + surname , icon);
+    private boolean status;
+    private int counterOfNewMessages;
+
+    public Item(int id, String name, String surname, boolean status, ImageIcon icon) {
+        super();
+        int k;
+        visibleText = name + " " + surname;
+        counterOfNewMessages = 0;
+        FontMetrics fm = this.getFontMetrics(this.getFont());
+        k = fm.stringWidth(visibleText);
+        String newVisibleText = "";
+        if (k > 115) {
+            for (int i = 0; i < visibleText.length(); i++) {
+                if (fm.stringWidth(newVisibleText + visibleText.charAt(i)) < 116) {
+                    newVisibleText += visibleText.charAt(i);
+                } else {
+                    newVisibleText += "...";
+                    this.setToolTipText(visibleText);
+                    visibleText = newVisibleText;
+                    break;
+                }
+            }
+        }
+
+        this.setText("<html>" + visibleText);
+        this.setIcon(icon);
         firstName = name;
         this.surname = surname;
         this.id = id;
-        this.status = status;
+        setStatus(status);
         this.setHorizontalAlignment(LEFT);
         this.setPreferredSize(new Dimension(165, 50));
+
     }
-    public void setStatus(String newStatus) {
+    public void setStatus(boolean newStatus) {
         status = newStatus;
+        if (!status) {
+            setBackground(Color.gray);
+        } else {
+            setBackground(Color.LIGHT_GRAY);
+        }
     }
+
+    public boolean isOnline() { return status; }
     public int getID() {
         return id;
-    }
-    public String getStatus() {
-        return status;
     }
 
 
@@ -46,5 +78,18 @@ public class Item extends JButton {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public int getCounterOfNewMessages() {
+        return counterOfNewMessages;
+    }
+
+    public void setCounterOfNewMessages(int counterOfNewMessages) {
+        this.counterOfNewMessages = counterOfNewMessages;
+        if (counterOfNewMessages == 0) {
+            this.setText("<html>" + visibleText);
+        } else {
+            this.setText("<html>[" + counterOfNewMessages + "]<br>" + visibleText);
+        }
     }
 }

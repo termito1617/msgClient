@@ -1,6 +1,8 @@
 package com.company.GUI.main;
 
 import com.company.Connection;
+import com.company.FileMessages;
+import com.company.Message;
 import com.sun.istack.internal.Nullable;
 import com.sun.xml.internal.bind.annotation.OverrideAnnotationOf;
 
@@ -17,7 +19,6 @@ import java.util.Random;
 public class MsgManager extends JFrame {
     private JTabbedPane jtb;
     private JTextField jtfInputMsg;
-    private int curIndex;
     private class ActionClose extends WindowAdapter {
         public void windowClosing(WindowEvent e){
             setVisible(false);
@@ -26,9 +27,9 @@ public class MsgManager extends JFrame {
 
     public MsgManager() {
         super();
-        curIndex = -1;
+
         addWindowListener(new ActionClose());
-        setBounds(235, 10, 500, 530);
+        setBounds(265, 10, 500, 530);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setResizable(false);
         JPanel mainPanel = new JPanel();
@@ -42,6 +43,21 @@ public class MsgManager extends JFrame {
         jpMsg.setLayout(new BoxLayout(jpMsg, BoxLayout.X_AXIS));
 
         jtfInputMsg = new JTextField();
+        jtfInputMsg.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    JScrollPane jsp = (JScrollPane) jtb.getComponentAt(jtb.getSelectedIndex());
+                    JPanelForMessages jpfm = (JPanelForMessages) jsp.getViewport().getView();
+                    Message msg = new Message(jtfInputMsg.getText(), 1, jpfm.getId());
+                    FileMessages fm = new FileMessages(Connection.getInstance().getMyId());
+                    fm.addMessage(msg);
+                    addMsg(msg, false);
+                    Connection.getInstance().Message_SendMsg(msg);
+                    jtfInputMsg.setText("");
+                }
+            }
+        });
 
         JButton b = new JButton("Отправить");
 
@@ -66,12 +82,20 @@ public class MsgManager extends JFrame {
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                JScrollPane jsp = (JScrollPane) jtb.getComponentAt(jtb.getSelectedIndex());
+                JPanelForMessages jpfm = (JPanelForMessages) jsp.getViewport().getView();
+                Message msg = new Message(jtfInputMsg.getText(), 1, jpfm.getId());
+                FileMessages fm = new FileMessages(Connection.getInstance().getMyId());
+                fm.addMessage(msg);
+                addMsg(msg, false);
+                Connection.getInstance().Message_SendMsg(msg);
+                jtfInputMsg.setText("");
             }
         });
         jpMsg.add(jtfInputMsg);
         jpMsg.add(b);
         jpMsg.add(l);
+        jpMsg.setBorder(BorderFactory.createEmptyBorder(2, 2, 4, 0));
         mainPanel.add(jtb);
         mainPanel.add(jpMsg);
         setContentPane(mainPanel);
@@ -91,7 +115,7 @@ public class MsgManager extends JFrame {
         }
         if (index != -1) {
             jtb.setSelectedIndex(index);
-
+            setVisible(true);
             return;
         }
         JPanelForMessages jpm = new JPanelForMessages(id);
@@ -100,32 +124,40 @@ public class MsgManager extends JFrame {
 
         //
 
-
         jtb.addTab(name + " " + surname, scrPane);
         jtb.setSelectedIndex(jtb.getTabCount() - 1);
         setVisible(true);
-        addMsg("Класс java.util.Random представляет собой генератор псевдослучайных чисел.", 0, true, id);
-        addMsg("Класс представлен двумя конструкторами", 1, true, id);
-        addMsg("Random() - создаёт генератор чисел, использующий уникальное начальное число", 1, true, id);
-        addMsg("Random(long seed) - позволяет указать начальное число вручную", 0, true, id);
-        addMsg("Так как класс создаёт псевдослучайное число, то задав начальное " +
-                "число, вы определяете начальную точку случайной последовательности.", 1, true, id);
-        addMsg("И будете получать одинаковые случайные последовательности.", 0, true, id);
-        addMsg("Чтобы избежать такого совпадения, обычно используют второй конструктор " +
-                "с использованием текущего времени в качестве инициирующего значения.", 1, true, id);
-        addMsg("Методы:", 0, true, id);
-        addMsg("boolean nextBoolean() - возвращает следующее случайное значение типа boolean", 1, true, id);
-        addMsg("void nextBytes(byte[] buf) - заполняет массив случайно созданными значениями", 0, true, id);
-        addMsg("double nextDouble() - возвращает следующее случайное значение типа double", 0, true, id);
-        addMsg("float nextFloat() - возвращает следующее случайное значение типа float", 0, true, id);
-        addMsg("synchronized double nextGaussian() - возвращает следующее случайное значение гауссова случайного числа, т.е. " +
-                "значения, центрированное по 0.0 со стандартным отклонением в 1.0 (кривая нормального распределения)", 1, true, id);
 
-
+        FileMessages fm = new FileMessages(Connection.getInstance().getMyId());
+        java.util.List<Message> msgList = fm.getMessage(id);
+        if (msgList == null) return;
+        for (Message m: msgList) {
+            m.setId(id);
+            addMsg(m, true);
+        }
         showM(id);
-
     }
-    public void addMsg(String text, int type, boolean t, int id) {
+    public JPanelForMessages getMessagePanel(int id) {
+        for (int i = 0; i < jtb.getTabCount(); i++) {
+
+            JScrollPane jsp = (JScrollPane) jtb.getComponentAt(i);
+            JPanelForMessages jpfm = (JPanelForMessages) jsp.getViewport().getView();
+
+            if (jpfm.getId() == id) {
+                return jpfm;
+            }
+        }
+        return null;
+    }
+    public boolean isSelectedTab(int id) {
+        if (jtb.getSelectedIndex() == -1) return false;
+        JScrollPane jsp = (JScrollPane) jtb.getComponentAt(jtb.getSelectedIndex());
+        JPanelForMessages jpfm = (JPanelForMessages) jsp.getViewport().getView();
+
+        return jpfm.getId() == id;
+    }
+
+    public void addMsg(Message msg, boolean t) {
         JScrollPane sp = null;
         JPanelForMessages pfm = null;
         for (int i = 0; i < jtb.getTabCount(); i++) {
@@ -133,18 +165,20 @@ public class MsgManager extends JFrame {
             JScrollPane jsp = (JScrollPane) jtb.getComponentAt(i);
             JPanelForMessages jpfm = (JPanelForMessages) jsp.getViewport().getView();
 
-            if (jpfm.getId() == id) {
+            if (jpfm.getId() == msg.getId()) {
                 sp = jsp;
                 pfm = jpfm;
             }
         }
-        if (sp == null || pfm == null) return;
+        if (sp == null) {
+            return;
+        }
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = pfm.getCount();
-        gbc.gridx = type == 0 ? 0 : 1;
+        gbc.gridx = msg.getType() == 0 ? 0 : 1;
         gbc.insets = new Insets(4, 4, 4, 4);
-        gbc.anchor = type == 0? GridBagConstraints.WEST : GridBagConstraints.EAST;
+        gbc.anchor = msg.getType() == 0? GridBagConstraints.WEST : GridBagConstraints.EAST;
         gbc.weightx = 10;
         JButton l = new JButton();
         l.setBackground(Color.WHITE);
@@ -155,7 +189,7 @@ public class MsgManager extends JFrame {
 
 
 
-        StringBuffer str = new StringBuffer(text.length() + text.length() / 30 * 4 + 10);
+        StringBuffer str = new StringBuffer(msg.getText().length() + msg.getText().length() / 30 * 4 + 10);
 
         str.append("<html>");
         int space = 0;
@@ -163,8 +197,8 @@ public class MsgManager extends JFrame {
         Graphics g = l.getGraphics();
         FontMetrics fm;
         fm = g.getFontMetrics();
-        for (int i= 0; i < text.length(); i++) {
-            char ch = text.charAt(i);
+        for (int i= 0; i < msg.getText().length(); i++) {
+            char ch = msg.getText().charAt(i);
             if (fm.stringWidth(str.substring(pLine) + ch) > 180) {
                 if (ch == ' ') {
                     str.append("<br>");

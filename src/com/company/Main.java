@@ -3,6 +3,7 @@ package com.company;
 import com.company.GUI.GuiLogin;
 
 import javax.swing.*;
+import java.io.File;
 
 
 public class Main {
@@ -10,7 +11,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
+                if ("Nimbus".equals(info.getName())) {
                     UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -22,8 +23,6 @@ public class Main {
 
         GuiLogin guiL = new GuiLogin();
         guiL.setVisible(true);
-
-
 
     }
 

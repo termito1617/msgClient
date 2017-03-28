@@ -15,6 +15,6 @@ public class PanelAccountInfo extends JPanel {
         this.add(labelAccountInfo);
         this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Вы вошли как:"));
 
-        setMaximumSize(new Dimension(200, 100));
+       setMaximumSize(new Dimension(300, 100));
     }
 }

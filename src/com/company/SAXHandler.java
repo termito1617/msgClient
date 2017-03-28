@@ -21,14 +21,20 @@ public class SAXHandler extends DefaultHandler {
     private String curTag;
     private HashMap<String, String> hm;
     private List<User> users;
+    private List<Message> messages;
+    private Message curMsg;
     private String type;
     private boolean isList;
+    private boolean isMsgList;
     private User curUser;
+
     public SAXHandler() {
         isList = false;
+        isMsgList = false;
         curUser = new User();
         hm = new HashMap<>();
         users = new ArrayList<>();
+        messages = new ArrayList<>();
     }
 
     public void startElement(String namespaceURI, String localName,
@@ -37,14 +43,27 @@ public class SAXHandler extends DefaultHandler {
         if (qName.equals("message")) {
             type = atts.getValue("type");
             if (type.equals("friends") || type.equals("users")) isList = true;
+            if (type.equals("messages") || type.equals("newFriends")) isMsgList = true;
         }
 
     }
 
     public void characters(char[] ch, int start, int length) throws SAXException {
         String value = new String(ch, start, length);
-
-        if (!isList) {
+        if (isMsgList) {
+            switch (curTag) {
+                case "id": {
+                    curMsg = new Message();
+                    curMsg.setId(Integer.parseInt(value));
+                    break;
+                }
+                case "text": {
+                    curMsg.setText(value);
+                    messages.add(curMsg);
+                    break;
+                }
+            }
+        } else if (!isList) {
             hm.put(curTag, value);
 
         } else {
@@ -68,10 +87,6 @@ public class SAXHandler extends DefaultHandler {
         }
     }
 
-
-
-
-
     public String getType() {
         return type;
     }
@@ -81,5 +96,9 @@ public class SAXHandler extends DefaultHandler {
     }
     List<User> getUserList() {
         return users;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
     }
 }

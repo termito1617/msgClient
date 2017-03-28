@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 /**
  * Created by vlad on 01.03.2017.
  */
- class FrendsPanel extends JPanel {
+public class FrendsPanel extends JPanel {
     private Item selected;
     private ActionListener ae;
     private ActionListener aeForContext;
@@ -43,9 +43,33 @@ import java.awt.event.ActionListener;
         aeForContext = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (e.getActionCommand().equals("Написать сообщение")) {
-                    msgManager.addTab(selected.getID(), selected.getFirstName(), selected.getSurname());
 
+                switch (e.getActionCommand()) {
+                    case "Открыть диалог": {
+                        msgManager.addTab(selected.getID(), selected.getFirstName(), selected.getSurname());
+                        selected.setCounterOfNewMessages(0);
+                        break;
+                    }
+                    case "Удалить из друзей": {
+                        int answer = JOptionPane.showConfirmDialog(null,
+                                "Вы действительно хотите удалить пользователя " + selected.getFirstName() + " " +
+                                        selected.getSurname() + " из друзей?",
+                                "Потвердите действие", JOptionPane.YES_NO_OPTION);
+                        if (answer == JOptionPane.YES_OPTION) {
+                            deleteItem(selected.getID());
+                            Connection.getInstance().Message_deleteFriend(selected.getID());
+                        }
+                        break;
+                    }
+                    case "Добавить в друзья": {
+                        User u = Connection.getInstance().MessageInfo();
+                        String ans = (String) JOptionPane.showInputDialog(null, "Введите сообщение пользователю которое будет приклеплено к заявке", "Заявка в друзья",
+                                JOptionPane.QUESTION_MESSAGE, null, null,
+                                "Пользователь " + u.getName() + " " + u.getLastName() + " хочет добавить вас в друзья");
+                        if (ans == null) break;
+                        Connection.getInstance().Message_newFriend(ans, selected.getID());
+                        break;
+                    }
                 }
             }
         };
@@ -58,7 +82,7 @@ import java.awt.event.ActionListener;
 
         jpuFriends = new JPopupMenu();
 
-        JMenuItem msg = new JMenuItem("Написать сообщение");
+        JMenuItem msg = new JMenuItem("Открыть диалог");
         msg.addActionListener(aeForContext);
         JMenuItem delete = new JMenuItem("Удалить из друзей");
         delete.addActionListener(aeForContext);
@@ -67,7 +91,9 @@ import java.awt.event.ActionListener;
 
 
         jpuUsers = new JPopupMenu();
-        jpuUsers.add("Добавить в друзья");
+        JMenuItem newFriend = new JMenuItem("Добавить в друзья");
+        newFriend.addActionListener(aeForContext);
+        jpuUsers.add(newFriend);
     }
 
     public void setSp(JScrollPane s) {
@@ -78,12 +104,30 @@ import java.awt.event.ActionListener;
         fPanel.add(item);
     }
     public void deleteItem(int id) {
-        Component[] c = getComponents();
+        Component[] c = fPanel.getComponents();
 
         for (Component aC : c) {
-            if (((Item) aC).getID() == id)
-                this.remove(aC);
+            if (((Item) aC).getID() == id) {
+                fPanel.remove(aC);
+                fPanel.revalidate();
+                fPanel.repaint();
+                return;
+            }
+        }
 
+    }
+    public void setCountOfNewMessages(int id, int count, boolean isAdd) {
+        Component[] c = fPanel.getComponents();
+
+        for (Component aC : c) {
+            Item item = (Item)aC;
+            if (item.getID() == id) {
+                if (isAdd) {
+                    item.setCounterOfNewMessages(count + item.getCounterOfNewMessages());
+                } else {
+                    item.setCounterOfNewMessages(count);
+                }
+            }
         }
     }
 
@@ -104,7 +148,7 @@ import java.awt.event.ActionListener;
         List<User> users = Connection.getInstance().Message_getUserList(name);
         if (users != null) {
             for (User user : users) {
-                Item item = new Item(user.getId(), user.getName(), user.getLastName(), "online", new ImageIcon("E:\\img.jpg"));
+                Item item = new Item(user.getId(), user.getName(), user.getLastName(), false, new ImageIcon("E:\\img.jpg"));
                 item.addActionListener(ae);
                 sPanel.add(item);
             }
@@ -127,5 +171,16 @@ import java.awt.event.ActionListener;
 
         sp.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Друзья"));
 
+    }
+    public void setStatuses(int id[], boolean status) {
+        if (id == null) return;
+        Component[] c = fPanel.getComponents();
+
+        for (Component aC : c) {
+            for (int cId: id) {
+                if (cId == ((Item)aC).getID())
+                    ((Item)aC).setStatus(status);
+            }
+        }
     }
 }
