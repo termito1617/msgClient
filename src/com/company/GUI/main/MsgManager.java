@@ -67,11 +67,11 @@ public class MsgManager extends JFrame {
         l.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                ((JLabel)e.getSource()).setIcon(new ImageIcon("E:\\closeDown.jpg"));
+                ((JLabel)e.getSource()).setIcon(new ImageIcon("closeDown.jpg"));
             }
             @Override
             public void mouseReleased(MouseEvent e) {
-                ((JLabel)e.getSource()).setIcon(new ImageIcon("E:\\closeUp.jpg"));
+                ((JLabel)e.getSource()).setIcon(new ImageIcon("closeUp.jpg"));
                 jtb.remove(jtb.getSelectedIndex());
                 if (jtb.getTabCount() == 0) setVisible(false);
 
