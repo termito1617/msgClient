@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by vlad on 28.03.2017.
+ * Created by vlad on 28.03.2017.--------
  */
+
+
 public class FileApplicationsToFriend {
     private String path;
     public FileApplicationsToFriend(int myId){
