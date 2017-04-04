@@ -14,15 +14,16 @@ import java.awt.event.ActionListener;
  * Created by vlad on 01.03.2017.
  */
 public class FrendsPanel extends JPanel {
-    private Item selected;
+    private Item           selected;
+    private JPanel         fPanel;
+    private JPanel         sPanel;
+    private JScrollPane    sp;
+    private JPopupMenu     jpuFriends;
+    private JPopupMenu     jpuUsers;
+    private MsgManager     msgManager;
     private ActionListener ae;
     private ActionListener aeForContext;
-    private JPanel fPanel;
-    private JPanel sPanel;
-    private JScrollPane sp;
-    private JPopupMenu jpuFriends;
-    private JPopupMenu jpuUsers;
-    private MsgManager msgManager;
+
 
     public FrendsPanel(MsgManager m) {
         super();
@@ -99,10 +100,12 @@ public class FrendsPanel extends JPanel {
     public void setSp(JScrollPane s) {
         sp = s;
     }
+
     public void addItem(Item item) {
         item.addActionListener(ae);
         fPanel.add(item);
     }
+
     public void deleteItem(int id) {
         Component[] c = fPanel.getComponents();
 
@@ -116,11 +119,12 @@ public class FrendsPanel extends JPanel {
         }
 
     }
+
     public void setCountOfNewMessages(int id, int count, boolean isAdd) {
         Component[] c = fPanel.getComponents();
 
         for (Component aC : c) {
-            Item item = (Item)aC;
+            Item item = (Item) aC;
             if (item.getID() == id) {
                 if (isAdd) {
                     item.setCounterOfNewMessages(count + item.getCounterOfNewMessages());
@@ -137,12 +141,13 @@ public class FrendsPanel extends JPanel {
         Component[] c = fPanel.getComponents();
 
         for (Component aC : c) {
-            if ( !(((Item) aC).getFirstName() + " " + ((Item) aC).getSurname()).contains(name)) {
+            if (!(((Item) aC).getFirstName() + " " + ((Item) aC).getSurname()).contains(name)) {
                 aC.setVisible(false);
             }
         }
 
     }
+
     public void searchAll(String name) {
         if (name.equals("")) return;
         List<User> users = Connection.getInstance().Message_getUserList(name);
@@ -159,6 +164,7 @@ public class FrendsPanel extends JPanel {
 
 
     }
+
     public void showAll() {
         Component[] c = fPanel.getComponents();
 
@@ -172,14 +178,15 @@ public class FrendsPanel extends JPanel {
         sp.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Друзья"));
 
     }
+
     public void setStatuses(int id[], boolean status) {
         if (id == null) return;
         Component[] c = fPanel.getComponents();
 
         for (Component aC : c) {
-            for (int cId: id) {
-                if (cId == ((Item)aC).getID())
-                    ((Item)aC).setStatus(status);
+            for (int cId : id) {
+                if (cId == ((Item) aC).getID())
+                    ((Item) aC).setStatus(status);
             }
         }
     }

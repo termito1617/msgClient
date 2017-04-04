@@ -11,10 +11,10 @@ import java.util.Scanner;
 public class FileMessages {
     private String path;
     public FileMessages(int myId){
-        path = "E:\\MyICQ\\Messages\\" + myId;
-        File f = new File("E:\\MyICQ");
+        path = "MyICQ\\Messages\\" + myId;
+        File f = new File("MyICQ");
         if (!f.exists()) f.mkdir();
-        f = new File("E:\\MyICQ\\Messages");
+        f = new File("MyICQ\\Messages");
         if (!f.exists()) f.mkdir();
     }
 

@@ -14,14 +14,16 @@ import java.awt.event.WindowEvent;
 
 
 public class GuiMainNew extends JFrame {
-    private MsgManager  msgManager;
+    private MsgManager msgManager;
     private FrendsPanel panelFriends;
-    private JButton     newFriends = new JButton();;
-    private int         countApplicatonsToFriends;
+    private JButton newFriends = new JButton();
+    ;
+    private int countApplicatonsToFriends;
     private GuiNewFriends gnf;
-    private ImageIcon defaultIcon = new ImageIcon("E:\\img.jpg");
+    private ImageIcon defaultIcon = new ImageIcon("img.jpg");
+
     private class ActionClose extends WindowAdapter {
-        public void windowClosing(WindowEvent e){
+        public void windowClosing(WindowEvent e) {
             Connection.getInstance().Message_End();
             System.exit(0);
         }
@@ -46,15 +48,15 @@ public class GuiMainNew extends JFrame {
         SearchPanel searchPanel = new SearchPanel(panelFriends);
 
 
-
         List<User> FriendsList = Connection.getInstance().Message_getFriendsList();
         for (User u : FriendsList) {
 
             Item item = new Item(u.getId(),
                     u.getName(),
                     u.getLastName(),
-                    Connection.getInstance().Message_isOnline(u.getId()) == 1 ,
+                    Connection.getInstance().Message_isOnline(u.getId()) == 1,
                     defaultIcon);
+
 
             panelFriends.addItem(item);
         }
@@ -79,7 +81,7 @@ public class GuiMainNew extends JFrame {
         FileApplicationsToFriend fatf = new FileApplicationsToFriend(Connection.getInstance().getMyId());
         gnf = new GuiNewFriends();
         if (messageList != null) {
-            for (Message m: messageList) {
+            for (Message m : messageList) {
                 setCountOfApp(1, true);
                 fatf.add(m);
                 User u = Connection.getInstance().Message_Info(m.getId());
@@ -108,7 +110,6 @@ public class GuiMainNew extends JFrame {
         mainPanel.add(j);
 
 
-
         setContentPane(mainPanel);
         gnf.setGmn(this);
         Connection.getInstance().setGuiMainNew(this);
@@ -127,17 +128,26 @@ public class GuiMainNew extends JFrame {
             newFriends.setVisible(false);
         }
     }
-    public MsgManager getMsgManager() { return msgManager; }
+
+    public MsgManager getMsgManager() {
+        return msgManager;
+    }
+
     public FrendsPanel getPanelFriends() {
         return panelFriends;
     }
-    public GuiNewFriends getGnf() {return gnf;}
+
+    public GuiNewFriends getGnf() {
+        return gnf;
+    }
+
     public void addMessage(Message m, boolean t) {
         msgManager.addMsg(m, t);
         if (!msgManager.isSelectedTab(m.getId())) {
             panelFriends.setCountOfNewMessages(m.getId(), 1, true);
         }
     }
+
     public ImageIcon getDefaultIcon() {
         return defaultIcon;
     }

@@ -10,8 +10,8 @@ import java.util.List;
 public class FileApplicationsToFriend {
     private String path;
     public FileApplicationsToFriend(int myId){
-        path = "E:\\MyICQ\\" + myId + ".txt";
-        File f = new File("E:\\MyICQ");
+        path = "MyICQ\\" + myId + ".txt";
+        File f = new File("MyICQ");
         if (!f.exists()) f.mkdir();
     }
 

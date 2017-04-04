@@ -67,8 +67,7 @@ public class GuiLogin extends JFrame {
         JButton         registrationB   = new JButton("Registration");
         JLabel          loginL          = new JLabel("Login:");
         JLabel          passwordL       = new JLabel("Password:");
-        loginTF.setText("termito1617@gmail.com");
-        passPF.setText("WicKedqwe15");
+
         errorL.setForeground(Color.red);
 
         logInB.addActionListener(new ActionBLoginInPress());

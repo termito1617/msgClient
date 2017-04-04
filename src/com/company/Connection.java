@@ -50,7 +50,8 @@ public class Connection extends Thread {
             try {
                 String str = input.readLine();
                 if (socket == null || !socket.isConnected() || str == null) {
-                    JOptionPane.showMessageDialog(null, "Соеденение пропало", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Соединение пропало", "Error", JOptionPane.ERROR_MESSAGE);
+                    System.out.println("SDf");
                     System.exit(-1);
                 }
 
@@ -123,7 +124,7 @@ public class Connection extends Thread {
 
 
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Соиденение пропало", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Соединение пропало", "Error", JOptionPane.ERROR_MESSAGE);
                 System.exit(-1);
             }
         }
@@ -136,7 +137,7 @@ public class Connection extends Thread {
                 output = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
 
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Соеденение отсутствует", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Соединение отсутствует", "Error", JOptionPane.ERROR_MESSAGE);
                 System.exit(-1);
             }
         }
