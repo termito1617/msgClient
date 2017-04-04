@@ -62,7 +62,7 @@ public class FrendsPanel extends JPanel {
                         break;
                     }
                     case "Добавить в друзья": {
-                        User u = Connection.getInstance().MessageInfo();
+                        User u = Connection.getInstance().Message_Info(0);
                         String ans = (String) JOptionPane.showInputDialog(null, "Введите сообщение пользователю которое будет приклеплено к заявке", "Заявка в друзья",
                                 JOptionPane.QUESTION_MESSAGE, null, null,
                                 "Пользователь " + u.getName() + " " + u.getLastName() + " хочет добавить вас в друзья");

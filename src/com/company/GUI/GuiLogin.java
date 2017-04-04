@@ -39,6 +39,7 @@ public class GuiLogin extends JFrame {
                 errorL.setText("Ошибка хеширования пароля.");
                 return;
             }
+            
             int result = con.Message_LoginIn(user);
             if (result == -1) {
                 errorL.setText("Отсутствует подключение к сети.");
@@ -48,7 +49,7 @@ public class GuiLogin extends JFrame {
                 errorL.setText("Логин и пароль не верны.");
                 return;
             }
-            user = con.MessageInfo();
+            user = con.Message_Info(0);
             setVisible(false);
             GuiMainNew gm = new GuiMainNew(user.getLogin(), user.getName(), user.getLastName(), null);
             gm.setVisible(true);
@@ -97,12 +98,12 @@ public class GuiLogin extends JFrame {
         panel.add(logInB, new GridBagConstraints(0, 2, 1, 1, 1, 1,
                GridBagConstraints.NORTHWEST,
                GridBagConstraints.HORIZONTAL,
-               new Insets(40, 5, 10, 2), 0, 0));
+               new Insets(40, 5, 2, 2), 0, 0));
 
         panel.add(registrationB, new GridBagConstraints(1, 2, 1, 1, 1, 1,
                 GridBagConstraints.NORTH,
                 GridBagConstraints.HORIZONTAL,
-                new Insets(40, 2, 10, 5), 0, 0));
+                new Insets(40, 2, 2, 5), 0, 0));
 
         panel.add(loginTF, new GridBagConstraints(1, 0, 1, 1, 1, 1,
                 GridBagConstraints.NORTHWEST,

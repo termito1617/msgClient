@@ -55,6 +55,9 @@ public class FileApplicationsToFriend {
         try {
             while ((line = reader.readLine()) != null) {
                 msg = new Message();
+                if (line.charAt(0) == '\uFEFF') {
+                    line = line.substring(1);
+                }
                 String[] strs = line.split(" ", 2);
 
                 msg.setId(Integer.parseInt(strs[0]));

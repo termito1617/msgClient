@@ -16,8 +16,10 @@ import java.awt.event.WindowEvent;
 public class GuiMainNew extends JFrame {
     private MsgManager  msgManager;
     private FrendsPanel panelFriends;
-    private JButton     newFriends;
+    private JButton     newFriends = new JButton();;
     private int         countApplicatonsToFriends;
+    private GuiNewFriends gnf;
+    private ImageIcon defaultIcon = new ImageIcon("E:\\img.jpg");
     private class ActionClose extends WindowAdapter {
         public void windowClosing(WindowEvent e){
             Connection.getInstance().Message_End();
@@ -28,8 +30,8 @@ public class GuiMainNew extends JFrame {
     public GuiMainNew(String login, String name, String surname, ImageIcon icon) {
         super("MyICQ");
         msgManager = new MsgManager();
+        gnf = null;
         countApplicatonsToFriends = 0;
-        ImageIcon defaultIcon = new ImageIcon("E:\\img.jpg");
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setBounds(10, 10, 230, 530);
         this.setResizable(false);
@@ -75,19 +77,24 @@ public class GuiMainNew extends JFrame {
 
         List<Message> messageList = Connection.getInstance().Message_getNewAppToFriends();
         FileApplicationsToFriend fatf = new FileApplicationsToFriend(Connection.getInstance().getMyId());
+        gnf = new GuiNewFriends();
         if (messageList != null) {
             for (Message m: messageList) {
+                setCountOfApp(1, true);
                 fatf.add(m);
+                User u = Connection.getInstance().Message_Info(m.getId());
+                gnf.add(m.getText(), u);
             }
         }
 
         JPanel j = new JPanel();
-        newFriends = new JButton();
+        j.setMaximumSize(new Dimension(400, 40));
+
         newFriends.setVisible(false);
         newFriends.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (!gnf.isVisible()) gnf.setVisible(true);
             }
         });
         newFriends.setHorizontalAlignment(SwingConstants.LEFT);
@@ -101,7 +108,9 @@ public class GuiMainNew extends JFrame {
         mainPanel.add(j);
 
 
+
         setContentPane(mainPanel);
+        gnf.setGmn(this);
         Connection.getInstance().setGuiMainNew(this);
     }
 
@@ -110,19 +119,27 @@ public class GuiMainNew extends JFrame {
         else countApplicatonsToFriends = n;
 
         if (countApplicatonsToFriends > 0) {
-            newFriends.setText("У вас " + n + " заявки в друзья");
+            newFriends.setText("У вас " + countApplicatonsToFriends + " новых заявки в друзья");
             if (!newFriends.isVisible()) newFriends.setVisible(true);
+            newFriends.revalidate();
+            newFriends.repaint();
+        } else {
+            newFriends.setVisible(false);
         }
     }
     public MsgManager getMsgManager() { return msgManager; }
     public FrendsPanel getPanelFriends() {
         return panelFriends;
     }
+    public GuiNewFriends getGnf() {return gnf;}
     public void addMessage(Message m, boolean t) {
         msgManager.addMsg(m, t);
         if (!msgManager.isSelectedTab(m.getId())) {
             panelFriends.setCountOfNewMessages(m.getId(), 1, true);
         }
+    }
+    public ImageIcon getDefaultIcon() {
+        return defaultIcon;
     }
 
 

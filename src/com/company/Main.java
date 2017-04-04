@@ -20,6 +20,9 @@ public class Main {
             e.printStackTrace();
         }
 
+        String ip = (String)JOptionPane.showInputDialog(null, "Введите IP", "MySCQ", JOptionPane.QUESTION_MESSAGE, null, null, "127.0.0.1");
+        Connection.getInstance().setIp(ip);
+        Connection.getInstance().init();
 
         GuiLogin guiL = new GuiLogin();
         guiL.setVisible(true);

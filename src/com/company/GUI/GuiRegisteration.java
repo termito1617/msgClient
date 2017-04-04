@@ -39,7 +39,7 @@ public class GuiRegisteration extends JFrame {
                 return;
             }
             if ( !Validator.checkString(loginTF.getText(), "^[a-zA-Z0-9_@.]+") ) {
-                errorL.setText("Некорректный логин. Используйте a-Z, цифры и символ '_'");
+                errorL.setText("Некорректный логин. Используйте a-Z, цифры и символы '_', '@', '.'");
                 return;
             }
             if ( !Validator.checkString(passwordPF.getText(), "^[a-zA-Z0-9_@.]+") ) {

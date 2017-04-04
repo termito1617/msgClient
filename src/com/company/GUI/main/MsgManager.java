@@ -46,7 +46,7 @@ public class MsgManager extends JFrame {
         jtfInputMsg.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER && jtfInputMsg.getText().length() != 0) {
                     JScrollPane jsp = (JScrollPane) jtb.getComponentAt(jtb.getSelectedIndex());
                     JPanelForMessages jpfm = (JPanelForMessages) jsp.getViewport().getView();
                     Message msg = new Message(jtfInputMsg.getText(), 1, jpfm.getId());
@@ -82,6 +82,7 @@ public class MsgManager extends JFrame {
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (jtfInputMsg.getText().length()  == 0) return;
                 JScrollPane jsp = (JScrollPane) jtb.getComponentAt(jtb.getSelectedIndex());
                 JPanelForMessages jpfm = (JPanelForMessages) jsp.getViewport().getView();
                 Message msg = new Message(jtfInputMsg.getText(), 1, jpfm.getId());

@@ -25,9 +25,9 @@ public class Item extends JButton {
         FontMetrics fm = this.getFontMetrics(this.getFont());
         k = fm.stringWidth(visibleText);
         String newVisibleText = "";
-        if (k > 115) {
+        if (k > 130) {
             for (int i = 0; i < visibleText.length(); i++) {
-                if (fm.stringWidth(newVisibleText + visibleText.charAt(i)) < 116) {
+                if (fm.stringWidth(newVisibleText + visibleText.charAt(i)) < 131) {
                     newVisibleText += visibleText.charAt(i);
                 } else {
                     newVisibleText += "...";
