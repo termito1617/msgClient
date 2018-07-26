@@ -38,7 +38,7 @@ public class Connection extends Thread {
 
     private Connection() {
         System.out.println("Creating conection");
-
+		//test comment
     }
     public void init() {
         connect();
