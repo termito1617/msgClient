@@ -11,7 +11,7 @@ import java.awt.*;
  */
 public class Item extends JButton {
     private int id;
-    private String firstName;
+    private String firstName; // test comment
     private String visibleText;
     private String surname;
     private boolean status;
